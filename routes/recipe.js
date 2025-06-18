@@ -29,11 +29,14 @@ router.get("/:name", async (req, res) => {
     const recipe = await Recipe.findOne({ title: req.params.name }).populate(
       "ingredients"
     );
-    if (!recipe) return res.send(400).send("Recipe doesn't exist");
-    res.status(201).send(recipe);
-    const ingredients = await Ingredient.find({ recipeId: recipe._id }); // <- This line
 
-    res.json({
+    if (!recipe) {
+      return res.status(400).send("Recipe doesn't exist");
+    }
+
+    const ingredients = await Ingredient.find({ recipeId: recipe._id });
+
+    res.status(200).json({
       recipe,
       ingredients,
     });
